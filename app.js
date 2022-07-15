@@ -20,10 +20,6 @@ connectdb(
   'WellMed'
 );
 
-app.listen(process.env.PORT || port, () =>
-  console.log(`Example app listening at http://localhost: ${port}`)
-);
-
 const app = express();
 
 app.use(logger('dev'));
