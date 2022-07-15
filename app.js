@@ -1,38 +1,43 @@
-import express, { response } from "express";
-import path from "path";
+import express, { response } from 'express';
+import path from 'path';
 
-import __dirname from "./dirname.js";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import logger from "morgan";
+import __dirname from './dirname.js';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import logger from 'morgan';
 
 //import Routes
-import newAdmin from "./routes/createAdmin.js";
-import newProduct from "./routes/newProduct.js";
-import login from "./routes/login.js";
-import SearchRoute from "./routes/search.js";
+import newAdmin from './routes/createAdmin.js';
+import newProduct from './routes/newProduct.js';
+import login from './routes/login.js';
+import SearchRoute from './routes/search.js';
 
 //connecting to DB
-import connectdb from "./connectdb.js";
+import connectdb from './connectdb.js';
+import { prototype } from 'events';
 connectdb(
-  "mongodb+srv://marlon:Jayjay123@filanime.je1ge.mongodb.net",
-  "WellMed"
+  'mongodb+srv://marlon:Jayjay123@filanime.je1ge.mongodb.net',
+  'WellMed'
+);
+
+app.listen(process.env.PORT || port, () =>
+  console.log(`Example app listening at http://localhost: ${port}`)
 );
 
 const app = express();
 
-app.use(logger("dev"));
+app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Routes
-app.use("/registerAdmin", newAdmin);
-app.use("/product", newProduct);
-app.use("/login", login);
-app.use("/search", SearchRoute);
+app.use('/registerAdmin', newAdmin);
+app.use('/product', newProduct);
+app.use('/login', login);
+app.use('/search', SearchRoute);
 
 // app.use(function (req, res, next) {
 //   res.status(404).json({message: "We couldn't find what you were looking for 😞"})
