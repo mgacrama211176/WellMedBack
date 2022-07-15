@@ -14,7 +14,6 @@ import SearchRoute from './routes/search.js';
 
 //connecting to DB
 import connectdb from './connectdb.js';
-import { prototype } from 'events';
 connectdb(
   'mongodb+srv://marlon:Jayjay123@filanime.je1ge.mongodb.net',
   'WellMed'
