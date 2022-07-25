@@ -15,7 +15,7 @@ import SearchRoute from './routes/search.js';
 //connecting to DB
 import connectdb from './connectdb.js';
 connectdb(
-  'mongodb+srv://marlon:Jayjay123@filanime.je1ge.mongodb.net',
+  'mongodb+srv://admin:Administrator@cluster0.hxm03.mongodb.net/WellMed?retryWrites=true&w=majority',
   'WellMed'
 );
 
