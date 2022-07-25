@@ -7,6 +7,8 @@ const { connect } = mongoose;
 export default async (host, dbName) => {
   try {
     await connect(host, { dbName });
+    console.log(host);
+    console.log(dbName);
     debug('Database is connected', host, dbName);
     console.log('Database is now Connected', dbName);
   } catch (e) {
