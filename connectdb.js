@@ -10,6 +10,7 @@ export default async (host, dbName) => {
     debug('Database is connected', host, dbName);
     console.log('Database is now Connected', dbName);
   } catch (e) {
-    console.error('failed connecting to mongodb server')`console.error(e)`;
+    console.error('failed connecting to mongodb server');
+    console.error(e);
   }
 };
