@@ -1,10 +1,13 @@
-import express from 'express';
-import adminModel from '../models/AdminAccount.js';
-import bcrypt from 'bcrypt';
+import express from "express";
+import adminModel from "../models/AdminAccount.js";
+import bcrypt from "bcrypt";
 const router = express.Router();
 
 /* GET users listing. */
-router.post('/', async (request, response) => {
+router.post("/", async (request, response) => {
+  const { username, password } = request.body;
+  console.log("adasdasdasd");
+
   adminModel.findOne({ username: request.body.username }).then((data) => {
     if (data) {
       bcrypt.compare(request.body.password, data.password).then((result) => {
