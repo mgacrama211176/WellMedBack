@@ -14,6 +14,7 @@ import SearchRoute from "./routes/search.js";
 
 //DrenchWorks
 import clientsRouter from "./routes/clientsRouter.js";
+import inventoryRouter from "./routes/inventoryRouter.js";
 
 //connecting to DB
 import connectdb from "./connectdb.js";
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //Routes
 app.use("/api/clients", clientsRouter);
+app.use("/api/inventory", inventoryRouter);
 app.use("/registerAdmin", newAdmin);
 app.use("/product", newProduct);
 app.use("/login", login);
