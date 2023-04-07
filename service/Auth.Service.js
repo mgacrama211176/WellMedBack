@@ -35,3 +35,18 @@ export const LougoutService = async (refreshToken, request, response) => {
   }
   return user;
 };
+
+export const HandleRefreshTokenService = async (refreshToken) => {
+  const user = await adminModel
+    .findOne({ refreshToken })
+    .select("+refreshToken");
+
+  // user has refreshToken but either it was already removed in the DB or refreshToken reuse
+  if (!user)
+    throw new AppError(
+      "Request Denied - Invalid Token",
+      HttpErrorCode.BadRequest
+    );
+
+  return user;
+};

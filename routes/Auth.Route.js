@@ -7,7 +7,11 @@ import validate from "../middleware/validate.js";
 import { SignInValidator } from "../validation/AuthValidator.js";
 
 // controller
-import { Logout, Signin } from "../controller/Auth.controller.js";
+import {
+  HandleAuthRefresh,
+  Logout,
+  Signin,
+} from "../controller/Auth.controller.js";
 
 const router = express.Router();
 
@@ -36,5 +40,7 @@ router;
 
 router.post("/signin", validate(SignInValidator), Signin);
 router.get("/logout", Logout);
+
+router.get("/refresh", HandleAuthRefresh);
 
 export default router;

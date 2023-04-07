@@ -4,10 +4,13 @@ import jwt from "jsonwebtoken";
 import catchAsync from "../middleware/catchAsync.js";
 import {
   CheckEmailandPasswordService,
+  HandleRefreshTokenService,
   LougoutService,
 } from "../service/Auth.Service.js";
 import clearCookie from "../utils/clearCookie.js";
 import HttpSuccessCode from "../utils/HttpSuccessCodes.js";
+import AppError from "../utils/appError.js";
+import HttpErrorCode from "../utils/HttpErrorCodes.js";
 
 // Signin Controller - check user if it is in db and creates access and refreshToken
 export const Signin = catchAsync(async (request, response, next) => {
@@ -30,7 +33,7 @@ export const Signin = catchAsync(async (request, response, next) => {
     { email: foundUser.email },
     process.env.JWT_ACCESSTOKEN_SECRET,
     {
-      expiresIn: 1000,
+      expiresIn: 30,
     }
   );
 
@@ -94,4 +97,66 @@ export const Logout = catchAsync(async (request, response) => {
   return response
     .status(HttpSuccessCode.Accepted)
     .send("Successfully Logged out");
+});
+
+export const HandleAuthRefresh = catchAsync(async (request, response) => {
+  const { cookies } = request;
+  const refreshToken = cookies.jwt ? cookies.jwt : "";
+
+  if (!cookies.jwt)
+    throw new AppError(
+      "Invalid Request - Forbidden Access",
+      HttpErrorCode.Forbidden
+    );
+
+  // returns user with the refresh token
+  const foundUser = await HandleRefreshTokenService(refreshToken);
+
+  // it will check the token if its expired or invalid and returns the data encoded in the token
+  jwt.verify(
+    refreshToken,
+    process.env.JWT_REFRESHTOKEN_SECRET,
+    (error, decoded) => {
+      // returns an error and forces user to sign in again
+      if (error) {
+        foundUser.refreshToken = foundUser.refreshToken.filter(
+          (token) => token !== refreshToken
+        );
+
+        foundUser.save();
+        clearCookie(request, response);
+        throw new AppError(
+          "Token Expired or Invalid - Please sign in again",
+          HttpErrorCode.BadRequest
+        );
+      }
+
+      // different user found in the decoded email and in the database. in short hacked user
+      if (foundUser.email !== decoded.email) {
+        foundUser.refreshToken = [];
+        foundUser.save();
+        clearCookie(request, response);
+
+        throw new AppError("Unauthorized Access", HttpErrorCode.Unauthorized);
+      }
+    }
+  );
+
+  // create accessToken
+  const accessToken = jwt.sign(
+    { email: foundUser.email },
+    process.env.JWT_ACCESSTOKEN_SECRET,
+    {
+      expiresIn: 1000,
+    }
+  );
+
+  return response.status(HttpSuccessCode.Accepted).json({
+    status: "success",
+    data: {
+      email: foundUser.email,
+      roles: foundUser.role,
+      accessToken,
+    },
+  });
 });

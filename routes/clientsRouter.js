@@ -1,6 +1,9 @@
 import express from "express";
 import newClients from "../models/ClientsModel.js";
 const router = express.Router();
+import desirealize from "../middleware/desirealize.js";
+
+router.use(desirealize);
 
 /* Adding of products */
 router.post("/", async (request, response) => {
