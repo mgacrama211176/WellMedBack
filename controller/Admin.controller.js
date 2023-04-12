@@ -9,7 +9,7 @@ export const CreateAdmin = catchAsync(async (request, response, next) => {
   const newAdminUser = await CreateAdminUserService(body);
 
   return response.status(HttpSuccessCode.Accepted).json({
-    status: "sucess",
+    status: "success",
     data: newAdminUser,
   });
 });
